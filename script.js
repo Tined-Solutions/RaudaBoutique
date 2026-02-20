@@ -101,12 +101,12 @@ function renderCategories() {
         const isActive = index === 0 ? 'active text-rauda-terracotta border-b-rauda-terracotta' : 'text-rauda-dark/50';
         
         navHtml += `
-            <li>
-                <button onclick="renderProducts('${cat}', this)" class="nav-tab ${isActive} text-xs md:text-sm font-bold uppercase tracking-widest px-4 py-2 hover:text-rauda-terracotta transition-colors whitespace-nowrap">
-                    ${cat}
-                </button>
-            </li>
-        `;
+        <li>
+            <button onclick="renderProducts('${cat}', this)" class="nav-tab ${isActive} text-xs md:text-sm font-bold uppercase tracking-widest px-4 py-2 hover:text-rauda-terracotta whitespace-nowrap">
+                ${cat}
+            </button>
+        </li>
+    `;
     });
     
     nav.innerHTML = navHtml;
@@ -527,3 +527,33 @@ function createFeaturedCardHtml(item) {
     </div>
     `;
 }
+
+// ==========================================
+// DRAG TO SCROLL (Navegación arrastrable en PC)
+// ==========================================
+const navSlider = document.getElementById('nav-tabs');
+let isDown = false;
+let startX;
+let scrollLeft;
+
+navSlider.addEventListener('mousedown', (e) => {
+    isDown = true;
+    startX = e.pageX - navSlider.offsetLeft;
+    scrollLeft = navSlider.scrollLeft;
+});
+
+navSlider.addEventListener('mouseleave', () => {
+    isDown = false;
+});
+
+navSlider.addEventListener('mouseup', () => {
+    isDown = false;
+});
+
+navSlider.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    e.preventDefault(); // Evita la selección de texto o comportamiento por defecto
+    const x = e.pageX - navSlider.offsetLeft;
+    const walk = (x - startX) * 2; // Multiplicador de velocidad de arrastre
+    navSlider.scrollLeft = scrollLeft - walk;
+});

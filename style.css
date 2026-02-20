@@ -13,14 +13,37 @@ html, body {
 .fade-in-up { animation: fadeInUp 0.8s cubic-bezier(0.2, 1, 0.3, 1) forwards; opacity: 0; transform: translateY(20px); }
 @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
 
-/* Navegación Activa */
-.nav-tab { transition: all 0.3s ease; position: relative; }
-.nav-tab.active { color: #B8422B; font-family: 'Playfair Display', serif; font-weight: 700; }
-/* Indicador sutil de punto debajo de la categoría activa */
-.nav-tab.active::after {
-    content: ''; position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%);
-    width: 4px; height: 4px; background-color: #B8422B; border-radius: 50%;
+@keyframes slideUpDot {
+    0% { opacity: 0; transform: translate(-50%, 10px) scale(0); }
+    100% { opacity: 1; transform: translate(-50%, 0) scale(1); }
 }
+
+/* Navegación Activa */
+.nav-tab { 
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important; /* Transición súper fluida y elegante */
+    position: relative; 
+    transform: translateY(0) scale(1);
+    transform-origin: bottom center;
+}
+
+.nav-tab.active { 
+    color: #B8422B; 
+    font-family: 'Playfair Display', serif; 
+    font-weight: 700; 
+}
+
+/* Indicador sutil de punto debajo de la categoría activa animado */
+.nav-tab.active::after {
+    content: ''; 
+    position: absolute; 
+    bottom: -6px; /* Ajuste por el corrimiento hacia arriba */
+    left: 50%; 
+    width: 4px; 
+    height: 4px; 
+    background-color: #B8422B; 
+    border-radius: 50%;
+}
+
 
 /* Botón flotante con mejor respuesta táctil */
 .cart-float { transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
