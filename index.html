@@ -19,14 +19,14 @@
 
     <header class="relative h-[100vh] w-full overflow-hidden flex items-center justify-center bg-[#1a1512]">
     <div class="absolute inset-0 z-0">
-        <img src="./assets/hero.png" 
+        <img src="./assets/hero2.png" 
             alt="Textura Campo" 
             class="w-full h-full object-cover opacity-60 scale-105 animate-[pulse_10s_ease-in-out_infinite]">
         <div class="absolute inset-0 opacity-50 bg-black"></div>
     </div>
 
   <div class="relative z-10 flex flex-col items-center justify-center w-full max-w-5xl px-6 fade-in-up">
-        <div class="relative group cursor-pointer transition-all duration-700 hover:-translate-y-1">
+        <div class="relative group transition-all duration-700 hover:-translate-y-1">
             
             <div class="absolute -inset-14 bg-white/5 blur-[60px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000 ease-out"></div>
             
@@ -57,10 +57,10 @@
             <div class="relative w-full overflow-hidden">
                 <div class="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-rauda-base to-transparent z-10 pointer-events-none md:hidden"></div>
                 <div class="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-rauda-base to-transparent z-10 pointer-events-none md:hidden"></div>
-                <ul class="flex overflow-x-auto gap-2 md:gap-8 no-scrollbar relative items-center snap-x snap-mandatory cursor-grab active:cursor-grabbing py-1" id="nav-tabs"></ul>
+                <ul class="flex overflow-x-auto overflow-y-hidden touch-pan-x gap-2 md:gap-8 px-4 no-scrollbar relative items-center snap-x snap-mandatory cursor-grab active:cursor-grabbing py-1" id="nav-tabs"></ul>
             </div>
 
-            <button onclick="openSearchModal()" class="shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-rauda-leather/5 text-rauda-leather hover:bg-rauda-terracotta hover:text-white transition-colors duration-300 shadow-sm group">
+            <button onclick="openSearchModal()" class="shrink-0 ml-5 md:ml-8 w-10 h-10 flex items-center justify-center rounded-full bg-rauda-leather/5 text-rauda-leather hover:bg-rauda-terracotta hover:text-white transition-colors duration-300 shadow-sm group">
                 <i class="ph-bold ph-magnifying-glass text-lg group-active:scale-90 transition-transform"></i>
             </button>
             
@@ -266,7 +266,7 @@
             </div>
 
             <div class="flex-1 overflow-y-auto p-6 md:p-8 bg-rauda-base/95 backdrop-blur-sm no-scrollbar">
-                <div id="search-results" class="grid grid-cols-2 gap-3 md:flex md:flex-col md:gap-2 pb-10 md:pb-2">
+                <div id="search-results" class="flex flex-col gap-2 md:gap-2 pb-10 md:pb-2">
                     </div>
                 <div id="search-empty" class="hidden text-center py-16 md:py-16 opacity-50 flex-col items-center justify-center">
                     <i class="ph-duotone ph-package text-5xl md:text-6xl text-rauda-leather mb-3"></i>
