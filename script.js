@@ -619,3 +619,78 @@ navSlider.addEventListener('mousemove', (e) => {
     const walk = (x - startX) * 2; // Multiplicador de velocidad de arrastre
     navSlider.scrollLeft = scrollLeft - walk;
 });
+
+
+
+// ==========================================
+// LÓGICA DEL BUSCADOR
+// ==========================================
+
+function openSearchModal() {
+    const modal = document.getElementById('search-modal');
+    const panel = document.getElementById('search-panel');
+    const backdrop = document.getElementById('search-backdrop');
+    const input = document.getElementById('search-input');
+    
+    // Limpiamos los campos antes de abrir
+    input.value = '';
+    document.getElementById('search-results').innerHTML = '';
+    document.getElementById('search-empty').classList.add('hidden');
+
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden'; // Evita que el fondo haga scroll
+    
+    requestAnimationFrame(() => {
+        backdrop.classList.remove('opacity-0');
+        panel.classList.remove('-translate-y-full');
+        panel.classList.add('translate-y-0');
+        
+        // Enfoca el teclado automáticamente después de la animación
+        setTimeout(() => input.focus(), 300); 
+    });
+}
+
+function closeSearchModal() {
+    const modal = document.getElementById('search-modal');
+    const panel = document.getElementById('search-panel');
+    const backdrop = document.getElementById('search-backdrop');
+
+    backdrop.classList.add('opacity-0');
+    panel.classList.remove('translate-y-0');
+    panel.classList.add('-translate-y-full');
+    
+    setTimeout(() => { 
+        modal.classList.add('hidden'); 
+        document.body.style.overflow = ''; 
+    }, 500);
+}
+
+// Escuchar lo que escribe el usuario en tiempo real
+document.getElementById('search-input').addEventListener('input', (e) => {
+    const query = e.target.value.toLowerCase().trim();
+    const resultsContainer = document.getElementById('search-results');
+    const emptyMessage = document.getElementById('search-empty');
+    
+    // Si borró todo, limpiamos la pantalla
+    if (query.length === 0) {
+        resultsContainer.innerHTML = '';
+        emptyMessage.classList.add('hidden');
+        return;
+    }
+
+    // Buscamos coincidencias
+    const filteredItems = CATALOG.filter(item => 
+        item.producto.toLowerCase().includes(query) || 
+        item.categoria.toLowerCase().includes(query) ||
+        (item.tipoVino && item.tipoVino.toLowerCase().includes(query))
+    );
+
+    if (filteredItems.length === 0) {
+        resultsContainer.innerHTML = ''; // Limpiamos si no hay nada
+        emptyMessage.classList.remove('hidden'); // Mostrar "No se encontraron"
+    } else {
+        emptyMessage.classList.add('hidden');
+        
+        resultsContainer.innerHTML = filteredItems.map((item, index) => createCardHtml(item, index)).join('');
+    }
+});

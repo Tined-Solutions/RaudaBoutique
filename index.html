@@ -51,11 +51,19 @@
     </div>
 </header>
 
-    <nav class="sticky top-0 z-40 bg-rauda-base/95 backdrop-blur-md border-b border-rauda-leather/5 py-4 shadow-sm" id="nav-container">
-        <div class="relative max-w-5xl mx-auto">
-            <div class="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-rauda-base to-transparent z-10 pointer-events-none md:hidden"></div>
-            <div class="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-rauda-base to-transparent z-10 pointer-events-none md:hidden"></div>
-            <ul class="flex overflow-x-auto gap-2 md:gap-8 px-4 no-scrollbar relative items-center snap-x snap-mandatory cursor-grab active:cursor-grabbing" id="nav-tabs">                </ul>
+    <nav class="sticky top-0 z-40 bg-rauda-base/95 backdrop-blur-md border-b border-rauda-leather/5 py-3 shadow-sm" id="nav-container">
+        <div class="relative max-w-6xl mx-auto px-4 flex items-center justify-between gap-2">
+            
+            <div class="relative w-full overflow-hidden">
+                <div class="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-rauda-base to-transparent z-10 pointer-events-none md:hidden"></div>
+                <div class="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-rauda-base to-transparent z-10 pointer-events-none md:hidden"></div>
+                <ul class="flex overflow-x-auto gap-2 md:gap-8 no-scrollbar relative items-center snap-x snap-mandatory cursor-grab active:cursor-grabbing py-1" id="nav-tabs"></ul>
+            </div>
+
+            <button onclick="openSearchModal()" class="shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-rauda-leather/5 text-rauda-leather hover:bg-rauda-terracotta hover:text-white transition-colors duration-300 shadow-sm group">
+                <i class="ph-bold ph-magnifying-glass text-lg group-active:scale-90 transition-transform"></i>
+            </button>
+            
         </div>
     </nav>
 
@@ -239,6 +247,30 @@
                         <i class="ph-bold ph-whatsapp-logo text-xl"></i> 
                         <span>Confirmar Pedido</span>
                     </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="search-modal" class="fixed inset-0 z-[110] hidden" role="dialog">
+        <div class="fixed inset-0 bg-rauda-dark/80 backdrop-blur-md transition-opacity opacity-0 duration-300" id="search-backdrop" onclick="closeSearchModal()"></div>
+        
+        <div class="fixed top-0 left-0 w-full h-[85vh] md:h-[75vh] bg-rauda-base shadow-2xl rounded-b-[2rem] transform transition-transform duration-500 ease-out-expo -translate-y-full flex flex-col" id="search-panel">
+            
+            <div class="p-6 md:p-10 border-b border-rauda-leather/10 flex items-center gap-4">
+                <i class="ph-bold ph-magnifying-glass text-2xl text-rauda-terracotta animate-pulse"></i>
+                <input type="text" id="search-input" placeholder="Buscar productos, vinos, cepas..." class="flex-1 bg-transparent border-none outline-none text-xl md:text-3xl font-display text-rauda-dark placeholder-rauda-dark/30 w-full">
+                <button onclick="closeSearchModal()" class="text-rauda-leather/50 hover:text-rauda-terracotta transition-colors p-2 active:scale-90">
+                    <i class="ph-bold ph-x text-2xl"></i>
+                </button>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-6 md:p-10 bg-rauda-base rounded-b-[2rem]">
+                <div id="search-results" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6 pb-10">
+                    </div>
+                <div id="search-empty" class="hidden text-center py-20 opacity-50 flex-col items-center justify-center">
+                    <i class="ph-duotone ph-package text-5xl text-rauda-leather mb-3"></i>
+                    <p class="font-serif italic text-rauda-dark text-lg">No encontramos lo que buscas.</p>
                 </div>
             </div>
         </div>
