@@ -21,7 +21,7 @@ const KEYS = {
     disponible: 'disponible',
     vinoDeLaSemana: 'vinoDeLaSemana',
     tipoVino: 'tipoVino', // Nueva columna para tipo de vino (tinto, blanco, rosado)
-    descuento: 'descuento' // Precio con descuento (si tiene valor, el producto está en oferta)
+    descuento: 'precioConDescuento' // Precio con descuento (si tiene valor, el producto está en oferta)
 };
 
 let CATALOG = []; 
@@ -261,7 +261,7 @@ function createCardHtml(item, index) {
     
     const priceHtml = hasDiscount 
         ? `<span class="font-sans text-rauda-dark/40 line-through text-[10px] md:text-xs">$${priceFormatted}</span>
-           <span class="font-sans font-bold text-red-600 whitespace-nowrap text-xs md:text-sm tracking-wide">$${discountFormatted}</span>`
+           <span class="font-sans font-bold text-red-700 whitespace-nowrap text-xs md:text-sm tracking-wide">$${discountFormatted}</span>`
         : `<span class="font-sans font-bold text-rauda-leather whitespace-nowrap text-xs md:text-sm tracking-wide">$${priceFormatted}</span>`;
 
     // DISEÑO EPICO: 4:5 ratio, imagen full cover, textos elegantes
@@ -273,7 +273,7 @@ function createCardHtml(item, index) {
             
             <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-300"></div>
             
-            ${hasDiscount ? `<div class="absolute top-2 left-2 bg-red-600 text-white text-[9px] md:text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-sm shadow-md z-10">Oferta</div>` : ''}
+            ${hasDiscount ? `<div class="absolute top-2 left-2 bg-red-700 text-white text-[9px] md:text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-sm shadow-md z-10">Oferta</div>` : ''}
             
             <div class="absolute bottom-2 right-2 bg-white/95 backdrop-blur-sm text-rauda-leather w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center shadow-lg md:translate-y-12 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 transition-all duration-300 z-10">
                 <i class="ph-bold ph-plus text-base md:text-lg"></i>
@@ -576,9 +576,9 @@ function createFeaturedCardHtml(item) {
         
         <div class="flex flex-col md:flex-row h-auto md:h-[350px] lg:h-[380px] bg-[#1a1512]">
             
-            <div class="w-full h-56 sm:h-64 md:h-full md:w-[40%] relative overflow-hidden shrink-0">
+            <div class="w-full h-100 sm:h-96 md:h-full md:w-[40%] relative overflow-hidden shrink-0">
                 <div class="absolute inset-0 bg-black/10 z-10 group-hover:bg-transparent transition-colors duration-700"></div>
-                ${hasDiscount ? `<div class="absolute top-3 left-3 bg-red-600 text-white text-[10px] md:text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-sm shadow-lg z-20">En Oferta</div>` : ''}
+                ${hasDiscount ? `<div class="absolute top-3 left-3 bg-red-700 text-white text-[10px] md:text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-sm shadow-lg z-20">En Oferta</div>` : ''}
                 <img src="${imgUrl}" 
                      class="w-full h-full object-cover transform transition-transform duration-[1.5s] ease-in-out group-hover:scale-105" 
                      alt="${item.producto}">
