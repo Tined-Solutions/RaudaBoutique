@@ -242,6 +242,7 @@ function renderProducts(category, btnElement) {
             });
             
             container.appendChild(gridDiv);
+            initScrollAnimations();
         }
         
         container.style.opacity = '1';
@@ -252,24 +253,26 @@ function renderProducts(category, btnElement) {
 function createCardHtml(item, index) {
     const imgUrl = item.imagen || 'https://via.placeholder.com/400x500?text=Sin+Imagen';
     const priceFormatted = item.precio.toLocaleString('es-AR');
-    // Escape seguro para JSON en HTML
     const itemJson = JSON.stringify(item).replace(/"/g, "&quot;");
     
-    // Lógica de precio con descuento
     const hasDiscount = item.descuento && item.descuento > 0;
     const discountFormatted = hasDiscount ? item.descuento.toLocaleString('es-AR') : null;
     
     const priceHtml = hasDiscount 
         ? `<span class="font-sans text-rauda-dark/40 line-through text-[10px] md:text-xs">$${priceFormatted}</span>
-           <span class="font-sans font-bold text-red-700 whitespace-nowrap text-xs md:text-sm tracking-wide">$${discountFormatted}</span>`
+        <span class="font-sans font-bold text-red-700 whitespace-nowrap text-xs md:text-sm tracking-wide">$${discountFormatted}</span>`
         : `<span class="font-sans font-bold text-rauda-leather whitespace-nowrap text-xs md:text-sm tracking-wide">$${priceFormatted}</span>`;
 
-    // DISEÑO EPICO: 4:5 ratio, imagen full cover, textos elegantes
+    // Nota: Agregamos 'card-hidden', 'skeleton-bg', 'img-lazy' y el evento onload
     return `
-    <article class="product-card group cursor-pointer relative flex flex-col h-full js-product-card" data-tipo="${item.tipoVino || ''}" onclick='openProductModal(${itemJson})' style="animation: fadeInUp 0.6s ease-out ${index * 0.05}s backwards">
+    <article class="product-card group cursor-pointer relative flex flex-col h-full js-product-card card-hidden" data-tipo="${item.tipoVino || ''}" onclick='openProductModal(${itemJson})'>
         
-        <div class="relative overflow-hidden aspect-[4/5] bg-gray-200 mb-3 rounded-sm shadow-sm w-full">
-            <img src="${imgUrl}" class="product-image w-full h-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-105" alt="${item.producto}" loading="lazy">
+        <div class="relative overflow-hidden aspect-[4/5] bg-gray-200 mb-3 rounded-sm shadow-sm w-full skeleton-bg">
+            <img src="${imgUrl}" 
+                class="product-image w-full h-full object-cover img-lazy group-hover:scale-105" 
+                alt="${item.producto}" 
+                loading="lazy" 
+                onload="this.classList.add('img-loaded'); this.parentElement.classList.remove('skeleton-bg');">
             
             <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-300"></div>
             
@@ -790,3 +793,29 @@ document.getElementById('search-input').addEventListener('input', (e) => {
         resultsContainer.innerHTML = filteredItems.map((item, index) => createSearchItemHtml(item, index)).join('');
     }
 });
+
+function initScrollAnimations() {
+    const observer = new IntersectionObserver((entries) => {
+        // Filtramos para animar solo las que están entrando al viewport
+        const intersectingEntries = entries.filter(entry => entry.isIntersecting);
+        
+        intersectingEntries.forEach((entry, index) => {
+            // Efecto cascada: multiplicamos el index por un pequeño delay
+            setTimeout(() => {
+                entry.target.classList.remove('card-hidden');
+                entry.target.classList.add('card-visible');
+            }, index * 75); // 75ms de separación entre cada card que aparece
+            
+            // Dejamos de observar la card una vez que ya se mostró
+            observer.unobserve(entry.target);
+        });
+    }, {
+        threshold: 0.1, // Se dispara cuando el 10% de la card es visible
+        rootMargin: "0px 0px 50px 0px" // Carga un poquito antes de que el usuario llegue
+    });
+
+    // Asignamos el observador a todas las cards renderizadas
+    document.querySelectorAll('.js-product-card').forEach(card => {
+        observer.observe(card);
+    });
+}

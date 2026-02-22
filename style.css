@@ -20,30 +20,45 @@ html, body {
 
 /* Navegación Activa */
 .nav-tab { 
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important; /* Transición súper fluida y elegante */
+    /* Transición suave para el color y el rebote */
+    transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s ease !important; 
     position: relative; 
-    transform: translateY(0) scale(1);
-    transform-origin: bottom center;
+    /* Forzamos a que siempre tenga la misma tipografía para evitar saltos molestos */
+    font-family: 'Lato', sans-serif;
+    transform-origin: center;
+}
+
+/* Efecto chupetón de rebote suave al presionar (click/touch) */
+.nav-tab:active {
+    transform: scale(0.92);
 }
 
 .nav-tab.active { 
     color: #B8422B; 
-    font-family: 'Playfair Display', serif; 
-    font-weight: 700; 
+    /* Eliminamos el cambio de font-family para mantener la estabilidad del layout */
 }
 
-/* Indicador sutil de punto debajo de la categoría activa animado */
-.nav-tab.active::after {
+/* Animación del indicador inferior (Línea expansiva elegante) */
+.nav-tab::after {
     content: ''; 
     position: absolute; 
-    bottom: -6px; /* Ajuste por el corrimiento hacia arriba */
+    bottom: -2px; 
     left: 50%; 
-    width: 4px; 
-    height: 4px; 
+    width: 0px; /* Empieza sin ancho */
+    height: 3px; 
     background-color: #B8422B; 
-    border-radius: 50%;
+    border-radius: 4px; /* Bordes redondeados tipo píldora */
+    transform: translateX(-50%); /* Centrado absoluto */
+    opacity: 0;
+    /* Transición elástica para que la línea crezca fluidamente */
+    transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
 }
 
+/* Al estar activa, la línea crece hacia los costados */
+.nav-tab.active::after {
+    width: 24px; /* Ancho final de la línea */
+    opacity: 1;
+}
 
 /* Botón flotante con mejor respuesta táctil */
 .cart-float { transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
@@ -88,3 +103,38 @@ html, body {
         }
     }
 
+/* --- ANIMACIONES DE CARDS (SCROLL) --- */
+.card-hidden {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+    /* Curva chupetona para un rebote sutil */
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+/* --- LAZY LOADING VISUAL (SKELETON) --- */
+.skeleton-bg {
+    /* Usamos los colores sand y base de tu paleta */
+    background: linear-gradient(90deg, #E6E2D6 25%, #F7F5F0 50%, #E6E2D6 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite linear;
+}
+
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* La imagen arranca invisible y aparece suavemente al cargar */
+.img-lazy {
+    opacity: 0;
+    transition: opacity 0.5s ease-out, transform 0.7s ease-in-out !important;
+}
+
+.img-loaded {
+    opacity: 1 !important;
+}
