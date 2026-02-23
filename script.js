@@ -820,7 +820,7 @@ function initMobileModalGestures() {
             const touchFromTop = touch.clientY - rect.top;
 
             // Solo habilitamos cierre por gesto desde la parte superior del modal
-            if (touchFromTop > 300) return;
+            if (touchFromTop > 250) return;
 
             startY = touch.clientY;
             currentY = startY;
