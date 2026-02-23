@@ -27,12 +27,47 @@ const KEYS = {
 let CATALOG = []; 
 let cart = [];
 let selectedPayment = 'Efectivo';
+let modalLockCount = 0;
+let lockedScrollY = 0;
 
 // --- INICIALIZACIÓN ---
 document.addEventListener('DOMContentLoaded', () => {
     initApp();
     loadCart();
+    initMobileModalGestures();
 });
+
+function lockBodyScroll() {
+    if (modalLockCount === 0) {
+        lockedScrollY = window.scrollY || window.pageYOffset || 0;
+        document.body.style.position = 'fixed';
+        document.body.style.top = `-${lockedScrollY}px`;
+        document.body.style.left = '0';
+        document.body.style.right = '0';
+        document.body.style.width = '100%';
+        document.body.style.overflow = 'hidden';
+    }
+    modalLockCount++;
+}
+
+function unlockBodyScroll() {
+    if (modalLockCount === 0) return;
+
+    modalLockCount--;
+    if (modalLockCount > 0) return;
+
+    const top = document.body.style.top;
+
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+    document.body.style.width = '';
+    document.body.style.overflow = '';
+
+    const scrollToY = top ? Math.abs(parseInt(top, 10)) : lockedScrollY;
+    window.scrollTo(0, Number.isNaN(scrollToY) ? lockedScrollY : scrollToY);
+}
 
 async function initApp() {
     const container = document.getElementById('main-content');
@@ -552,7 +587,7 @@ function openProductModal(item) {
     const backdrop = document.getElementById('modal-backdrop');
 
     modal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
+    lockBodyScroll();
     
     panel.classList.add('transition-all', 'duration-500', 'ease-out-expo');
 
@@ -572,7 +607,7 @@ function closeProductModal() {
     panel.classList.remove('translate-y-0', 'md:opacity-100', 'md:translate-y-0', 'md:scale-100');
     panel.classList.add('translate-y-full', 'md:opacity-0', 'md:translate-y-8', 'md:scale-95');
     
-    setTimeout(() => { modal.classList.add('hidden'); document.body.style.overflow = ''; }, 450);
+    setTimeout(() => { modal.classList.add('hidden'); unlockBodyScroll(); }, 450);
 }
 
 function openCartModal() {
@@ -582,7 +617,7 @@ function openCartModal() {
     const backdrop = document.getElementById('cart-backdrop');
     
     modal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
+    lockBodyScroll();
     panel.classList.add('transition-all', 'duration-500', 'ease-out-expo');
 
     requestAnimationFrame(() => {
@@ -603,7 +638,7 @@ function closeCartModal() {
 
     setTimeout(() => {
         modal.classList.add('hidden');
-        document.body.style.overflow = '';
+        unlockBodyScroll();
     }, 450);
 }
 
@@ -734,7 +769,7 @@ function openSearchModal() {
     // Cambiamos a 'flex' para que se centre bien en PC
     modal.classList.remove('hidden');
     modal.classList.add('flex'); 
-    document.body.style.overflow = 'hidden'; 
+    lockBodyScroll(); 
     
     requestAnimationFrame(() => {
         backdrop.classList.remove('opacity-0');
@@ -760,12 +795,93 @@ function closeSearchModal() {
     setTimeout(() => { 
         modal.classList.add('hidden'); 
         modal.classList.remove('flex');
-        
-        // IMPORTANTE: Solo restauramos el scroll si no se abrió un producto en el medio
-        if (document.getElementById('product-modal').classList.contains('hidden')) {
-            document.body.style.overflow = ''; 
-        }
+        unlockBodyScroll();
     }, 500);
+}
+
+function initMobileModalGestures() {
+    const setupSwipeToClose = ({ modalId, panelId, backdropId, closeFn }) => {
+        const modal = document.getElementById(modalId);
+        const panel = document.getElementById(panelId);
+        const backdrop = document.getElementById(backdropId);
+
+        if (!modal || !panel || !backdrop) return;
+
+        let startY = 0;
+        let currentY = 0;
+        let isDragging = false;
+
+        panel.addEventListener('touchstart', (e) => {
+            if (window.innerWidth >= 768) return;
+            if (modal.classList.contains('hidden')) return;
+
+            const touch = e.touches[0];
+            const rect = panel.getBoundingClientRect();
+            const touchFromTop = touch.clientY - rect.top;
+
+            // Solo habilitamos cierre por gesto desde la parte superior del modal
+            if (touchFromTop > 300) return;
+
+            startY = touch.clientY;
+            currentY = startY;
+            isDragging = true;
+
+            panel.style.transition = 'none';
+            backdrop.style.transition = 'none';
+        }, { passive: true });
+
+        panel.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+
+            currentY = e.touches[0].clientY;
+            const deltaY = Math.max(0, currentY - startY);
+
+            if (deltaY <= 0) return;
+
+            panel.style.transform = `translateY(${deltaY}px)`;
+            backdrop.style.opacity = String(Math.max(0, 1 - deltaY / 220));
+        }, { passive: true });
+
+        const finishDrag = () => {
+            if (!isDragging) return;
+
+            const deltaY = Math.max(0, currentY - startY);
+            isDragging = false;
+
+            panel.style.transition = '';
+            backdrop.style.transition = '';
+            panel.style.transform = '';
+            backdrop.style.opacity = '';
+
+            if (deltaY > 110) {
+                closeFn();
+            }
+        };
+
+        panel.addEventListener('touchend', finishDrag, { passive: true });
+        panel.addEventListener('touchcancel', finishDrag, { passive: true });
+    };
+
+    setupSwipeToClose({
+        modalId: 'product-modal',
+        panelId: 'modal-panel',
+        backdropId: 'modal-backdrop',
+        closeFn: closeProductModal
+    });
+
+    setupSwipeToClose({
+        modalId: 'cart-modal',
+        panelId: 'cart-panel',
+        backdropId: 'cart-backdrop',
+        closeFn: closeCartModal
+    });
+
+    setupSwipeToClose({
+        modalId: 'search-modal',
+        panelId: 'search-panel',
+        backdropId: 'search-backdrop',
+        closeFn: closeSearchModal
+    });
 }
 
 // Diseño en formato lista unificado para Móviles y PC
