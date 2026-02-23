@@ -68,15 +68,31 @@ function unlockBodyScroll() {
     const scrollToY = top ? Math.abs(parseInt(top, 10)) : lockedScrollY;
     const finalScrollY = Number.isNaN(scrollToY) ? lockedScrollY : scrollToY;
 
-    // Evita animación por `scroll-smooth` al restaurar la posición tras cerrar modal
+    // Fix para mobile: desactivar scroll-smooth del HTML antes de restaurar posición
     const html = document.documentElement;
-    const previousScrollBehavior = html.style.scrollBehavior;
+    const hadSmoothScroll = html.classList.contains('scroll-smooth');
+    
+    if (hadSmoothScroll) {
+        html.classList.remove('scroll-smooth');
+    }
     html.style.scrollBehavior = 'auto';
-    window.scrollTo({ top: finalScrollY, left: 0, behavior: 'auto' });
+    
+    // Usar sintaxis legacy de scrollTo para máxima compatibilidad mobile
+    window.scrollTo(0, finalScrollY);
 
-    requestAnimationFrame(() => {
-        html.style.scrollBehavior = previousScrollBehavior;
-    });
+    // Restaurar scroll-smooth después de un frame (solo en desktop o con delay en mobile)
+    if (window.innerWidth >= 768) {
+        requestAnimationFrame(() => {
+            html.style.scrollBehavior = '';
+            if (hadSmoothScroll) html.classList.add('scroll-smooth');
+        });
+    } else {
+        // En mobile, delay mayor para evitar el salto visual
+        setTimeout(() => {
+            html.style.scrollBehavior = '';
+            if (hadSmoothScroll) html.classList.add('scroll-smooth');
+        }, 50);
+    }
 }
 
 async function initApp() {
