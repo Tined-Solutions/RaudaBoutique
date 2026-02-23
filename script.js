@@ -66,7 +66,17 @@ function unlockBodyScroll() {
     document.body.style.overflow = '';
 
     const scrollToY = top ? Math.abs(parseInt(top, 10)) : lockedScrollY;
-    window.scrollTo(0, Number.isNaN(scrollToY) ? lockedScrollY : scrollToY);
+    const finalScrollY = Number.isNaN(scrollToY) ? lockedScrollY : scrollToY;
+
+    // Evita animación por `scroll-smooth` al restaurar la posición tras cerrar modal
+    const html = document.documentElement;
+    const previousScrollBehavior = html.style.scrollBehavior;
+    html.style.scrollBehavior = 'auto';
+    window.scrollTo({ top: finalScrollY, left: 0, behavior: 'auto' });
+
+    requestAnimationFrame(() => {
+        html.style.scrollBehavior = previousScrollBehavior;
+    });
 }
 
 async function initApp() {
