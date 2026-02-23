@@ -633,7 +633,7 @@ function createFeaturedCardHtml(item) {
         
         <div class="flex flex-col md:flex-row h-auto md:h-[350px] lg:h-[380px] bg-[#1a1512]">
             
-            <div class="w-full h-80 sm:h-96 md:h-full md:w-[40%] relative overflow-hidden shrink-0">
+            <div class="w-full aspect-[4/5] md:aspect-auto md:h-full md:w-[40%] relative overflow-hidden shrink-0">
                 <div class="absolute inset-0 bg-black/10 z-10 group-hover:bg-transparent transition-colors duration-700"></div>
                 ${hasDiscount ? `<div class="absolute top-3 left-3 bg-red-700 text-white text-[10px] md:text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-sm shadow-lg z-20">En Oferta</div>` : ''}
                  <img src="${imgUrl}" 
