@@ -549,24 +549,28 @@ function selectPayment(method) {
 function sendOrderToWhatsapp() {
     if (cart.length === 0) return;
     
-    let message = `¡Hola *${CONFIG.businessName}*!, deseo realizar el siguiente pedido:%0A%0A`;
+    let message = `¡Hola *${CONFIG.businessName}*!, deseo realizar el siguiente pedido:\n\n`;
     let total = 0;
     
     cart.forEach(item => {
         const subtotal = item.precio * item.cantidad;
         total += subtotal;
-        message += `▪️ ${item.cantidad}x *${item.producto}* ($${subtotal.toLocaleString('es-AR')})%0A`;
+        message += ` •  ${item.cantidad}x *${item.producto}* ($${subtotal.toLocaleString('es-AR')})\n`;
     });
     
-    message += `%0A────────────────%0A`;
-    message += `*TOTAL ESTIMADO: $${total.toLocaleString('es-AR')}*%0A`;
-    message += `%0A💳 *Forma de Pago:* ${selectedPayment}`;
-    message += `%0A👤 *Nombre:* (Completar)`;
-    message += `%0A📍 *Envío/Retiro:* (Completar)`;
+    message += `──────────────\n`;
+    message += `*TOTAL ESTIMADO: $${total.toLocaleString('es-AR')}*\n\n`;
+    message += `*Forma de Pago:* ${selectedPayment}\n`;
+    message += `*Nombre:* (Completar)\n`;
+    message += `*Envío/Retiro:* (Completar)`;
 
-    window.open(`https://wa.me/${CONFIG.whatsappNumber}?text=${message}`, '_blank');
+    const encodedMessage = encodeURIComponent(message);
+
+    window.open(
+        `https://wa.me/${CONFIG.whatsappNumber}?text=${encodedMessage}`,
+        '_blank'
+    );
 }
-
 // ==========================================
 // UTILIDADES (TOAST, MODALES)
 // ==========================================
