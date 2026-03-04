@@ -460,14 +460,35 @@ function addToCart(item) {
 function removeFromCart(id) {
     const index = cart.findIndex(i => String(i.id) === String(id));
     if (index > -1) {
-        if (cart[index].cantidad > 1) {
-            cart[index].cantidad--;
-        } else {
-            cart.splice(index, 1);
-        }
+        cart.splice(index, 1);
         saveCart();
         updateCartIcon();
         renderCartItems();
+        showToast('Producto eliminado', 'warning');
+    }
+}
+
+function increaseQuantity(id) {
+    const index = cart.findIndex(i => String(i.id) === String(id));
+    if (index > -1) {
+        cart[index].cantidad++;
+        saveCart();
+        updateCartIcon();
+        renderCartItems();
+    }
+}
+
+function decreaseQuantity(id) {
+    const index = cart.findIndex(i => String(i.id) === String(id));
+    if (index > -1) {
+        if (cart[index].cantidad > 1) {
+            cart[index].cantidad--;
+            saveCart();
+            updateCartIcon();
+            renderCartItems();
+        } else {
+            removeFromCart(id);
+        }
     }
 }
 
@@ -504,19 +525,28 @@ function renderCartItems() {
         const subtotal = item.precio * item.cantidad;
         total += subtotal;
         return `
-        <div class="flex gap-4 py-4 border-b border-rauda-leather/5">
-            <div class="w-16 h-16 bg-gray-100 shrink-0 rounded-md overflow-hidden border border-rauda-leather/10">
+        <div class="flex gap-3 py-3 border-b border-rauda-leather/5">
+            <div class="w-14 h-14 bg-gray-100 shrink-0 rounded-md overflow-hidden border border-rauda-leather/10">
                 <img src="${item.imagen || 'https://via.placeholder.com/100'}" class="w-full h-full object-cover">
             </div>
-            <div class="flex-1">
-                <h4 class="font-serif text-rauda-dark leading-tight mb-1">${item.producto}</h4>
-                <div class="flex justify-between items-center">
-                    <p class="text-xs font-sans text-rauda-leather/60 font-bold">$${item.precio.toLocaleString('es-AR')} x ${item.cantidad}</p>
+            <div class="flex-1 min-w-0">
+                <h4 class="font-serif text-sm text-rauda-dark leading-tight mb-1.5">${item.producto}</h4>
+                <div class="flex justify-between items-center mb-1.5">
+                    <p class="text-[10px] font-sans text-rauda-leather/60 font-bold">$${item.precio.toLocaleString('es-AR')} c/u</p>
                     <p class="text-sm font-serif text-rauda-dark font-bold">$${subtotal.toLocaleString('es-AR')}</p>
                 </div>
+                <div class="flex items-center gap-1.5">
+                    <button onclick="decreaseQuantity('${item.id}')" class="w-6 h-6 flex items-center justify-center rounded-full border border-rauda-leather/20 text-rauda-leather hover:bg-rauda-leather hover:text-white transition-colors active:scale-90">
+                        <i class="ph-bold ph-minus text-xs"></i>
+                    </button>
+                    <span class="text-xs font-bold text-rauda-dark w-7 text-center">${item.cantidad}</span>
+                    <button onclick="increaseQuantity('${item.id}')" class="w-6 h-6 flex items-center justify-center rounded-full border border-rauda-terracotta bg-rauda-terracotta text-white hover:bg-rauda-leather transition-colors active:scale-90">
+                        <i class="ph-bold ph-plus text-xs"></i>
+                    </button>
+                </div>
             </div>
-            <button onclick="removeFromCart('${item.id}')" class="text-red-400 hover:text-red-600 p-2 rounded-full hover:bg-red-50 transition-colors self-center">
-                <i class="ph-bold ph-trash"></i>
+            <button onclick="removeFromCart('${item.id}')" class="text-red-400 hover:text-red-600 p-1.5 rounded-full hover:bg-red-50 transition-colors self-start">
+                <i class="ph-bold ph-trash text-sm"></i>
             </button>
         </div>
         `;
@@ -549,6 +579,9 @@ function selectPayment(method) {
 function sendOrderToWhatsapp() {
     if (cart.length === 0) return;
     
+    const customerName = document.getElementById('customer-name').value.trim();
+    const nombreFormateado = customerName || '(Por completar)';
+    
     let message = `¡Hola *${CONFIG.businessName}*!, deseo realizar el siguiente pedido:\n\n`;
     let total = 0;
     
@@ -560,8 +593,8 @@ function sendOrderToWhatsapp() {
     
     message += `──────────────\n`;
     message += `*TOTAL ESTIMADO: $${total.toLocaleString('es-AR')}*\n\n`;
+    message += `*Nombre:* ${nombreFormateado}\n`;
     message += `*Forma de Pago:* ${selectedPayment}\n`;
-    message += `*Nombre:* (Completar)\n`;
     message += `*Envío/Retiro:* (Completar)`;
 
     const encodedMessage = encodeURIComponent(message);

@@ -51,7 +51,7 @@
         </div>
     </div>
 
-    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex flex-col items-center gap-2 opacity-80">
+    <div class="absolute bottom-12 md:bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex flex-col items-center gap-2 opacity-80">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-white animate-bounce">
             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
         </svg>
@@ -231,26 +231,29 @@
                     <button onclick="closeCartModal()" class="text-rauda-leather/50 hover:text-rauda-terracotta p-2"><i class="ph-bold ph-x text-xl"></i></button>
                 </div>
 
-                <div id="cart-items-container" class="flex-1 overflow-y-auto p-6 space-y-4 bg-rauda-base"></div>
+                <div id="cart-items-container" class="flex-1 overflow-y-auto p-4 md:p-6 space-y-2 bg-rauda-base"></div>
 
-                <div class="p-6 bg-white border-t border-rauda-leather/10 pb-10 md:pb-6 shadow-[0_-5px_20px_rgba(0,0,0,0.05)]">
+                <div class="p-4 md:p-6 bg-white border-t border-rauda-leather/10 pb-8 md:pb-6 shadow-[0_-5px_20px_rgba(0,0,0,0.05)]">
                     
-                    <p class="text-rauda-dark/60 text-[10px] uppercase tracking-widest mb-3 font-bold">Forma de Pago</p>
-                    <div class="flex gap-3 mb-6">
-                        <button onclick="selectPayment('efectivo')" id="btn-pago-efectivo" class="flex-1 py-3 px-3 rounded-lg border transition-all active:scale-95 text-xs flex items-center justify-center gap-2 font-bold uppercase tracking-wider shadow-sm bg-rauda-terracotta text-white border-rauda-terracotta">
-                            <i class="ph-fill ph-money text-lg"></i> Efectivo
+                    <p class="text-rauda-dark/60 text-[10px] uppercase tracking-widest mb-1.5 font-bold">Tu Nombre</p>
+                    <input type="text" id="customer-name" placeholder="Nombre" class="w-full px-3 py-2.5 rounded-lg border border-rauda-leather/20 text-rauda-dark font-sans focus:outline-none focus:border-rauda-terracotta transition-colors mb-3 text-sm">
+                    
+                    <p class="text-rauda-dark/60 text-[10px] uppercase tracking-widest mb-1.5 font-bold">Forma de Pago</p>
+                    <div class="flex gap-2 mb-4">
+                        <button onclick="selectPayment('efectivo')" id="btn-pago-efectivo" class="flex-1 py-2.5 px-2 rounded-lg border transition-all active:scale-95 text-[10px] flex items-center justify-center gap-1.5 font-bold uppercase tracking-wider shadow-sm bg-rauda-terracotta text-white border-rauda-terracotta">
+                            <i class="ph-fill ph-money text-base"></i> Efectivo
                         </button>
-                        <button onclick="selectPayment('transferencia')" id="btn-pago-transferencia" class="flex-1 py-3 px-3 rounded-lg border transition-all active:scale-95 text-xs flex items-center justify-center gap-2 font-bold uppercase tracking-wider shadow-sm bg-white text-rauda-leather border-rauda-leather/20">
-                            <i class="ph-fill ph-bank text-lg"></i> Transferencia
+                        <button onclick="selectPayment('transferencia')" id="btn-pago-transferencia" class="flex-1 py-2.5 px-2 rounded-lg border transition-all active:scale-95 text-[10px] flex items-center justify-center gap-1.5 font-bold uppercase tracking-wider shadow-sm bg-white text-rauda-leather border-rauda-leather/20">
+                            <i class="ph-fill ph-bank text-base"></i> Transferencia
                         </button>
                     </div>
 
-                    <div class="flex justify-between items-end mb-6">
-                        <span class="text-rauda-dark/60 text-xs font-bold uppercase tracking-widest">Total Estimado</span>
-                        <span id="cart-total" class="text-3xl font-display font-bold text-rauda-leather">$0</span>
+                    <div class="flex justify-between items-end mb-4">
+                        <span class="text-rauda-dark/60 text-[10px] font-bold uppercase tracking-widest">Total Estimado</span>
+                        <span id="cart-total" class="text-2xl md:text-3xl font-display font-bold text-rauda-leather">$0</span>
                     </div>
                     
-                    <button onclick="sendOrderToWhatsapp()" class="w-full bg-[#25D366] text-white font-bold py-4 rounded-xl shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-3 text-sm uppercase tracking-widest hover:bg-[#20bd5a]">
+                    <button onclick="sendOrderToWhatsapp()" class="w-full bg-[#25D366] text-white font-bold py-3.5 rounded-xl shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 text-xs uppercase tracking-widest hover:bg-[#20bd5a]">
                         <i class="ph-bold ph-whatsapp-logo text-xl"></i> 
                         <span>Confirmar Pedido</span>
                     </button>
