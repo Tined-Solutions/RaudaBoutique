@@ -4,7 +4,7 @@ const ID_SHEET = '1jKoiVaK619iS7hGGsqtxsrWgzePmF_VY33VbIgdc-ag';
 const SHEET_TAB = 'rauda'; 
 
 const CONFIG = {
-    whatsappNumber: '5493447402198',
+    whatsappNumber: '5493447576788',
     businessName: 'Rauda',
     menuUrl: `https://opensheet.elk.sh/${ID_SHEET}/${SHEET_TAB}`,
 };
